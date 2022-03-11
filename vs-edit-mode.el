@@ -73,7 +73,7 @@
   :lighter " VS-Edit"
   :group vs-edit
   (when vs-edit-mode
-    (when (memq major-mode vs-edit-active-modes)
+    (unless (memq major-mode vs-edit-active-modes)
       (vs-edit-mode -1))))
 
 (defun vs-edit-turn-on-mode ()
