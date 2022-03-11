@@ -1,14 +1,14 @@
-;;; vs-edit-mode.el ---   -*- lexical-binding: t; -*-
+;;; vs-edit-mode.el --- Minor mode accomplish editing experience in Visual Studio  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2022  Shen, Jen-Chieh
 ;; Created date 2022-03-11 22:10:58
 
 ;; Author: Shen, Jen-Chieh <jcs090218@gmail.com>
-;; Description:
-;; Keyword:
-;; Version: 0.0.1
+;; Description: Minor mode accomplish editing experience in Visual Studio.
+;; Keyword: editing vs
+;; Version: 0.1.0
 ;; Package-Requires: ((emacs "24.3"))
-;; URL: https://github.com/jcs090218/vs-edit-mode
+;; URL: https://github.com/emacs-vs/vs-edit-mode
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -27,7 +27,7 @@
 
 ;;; Commentary:
 ;;
-;;
+;; Minor mode accomplish editing experience in Visual Studio.
 ;;
 
 ;;; Code:
