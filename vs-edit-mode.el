@@ -76,6 +76,16 @@
     (when (memq major-mode vs-edit-active-modes)
       (vs-edit-mode -1))))
 
+(defun vs-edit-turn-on-mode ()
+  "Turn on the 'vs-edit-mode'."
+  (vs-edit-mode 1))
+
+;;;###autoload
+(define-globalized-minor-mode global-vs-edit-mode
+  vs-edit-mode vs-edit-turn-on-mode
+  :group 'vs-edit
+  :require 'vs-edit)
+
 ;;
 ;; (@* "Util" )
 ;;
