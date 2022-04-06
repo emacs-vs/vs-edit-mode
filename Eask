@@ -1,4 +1,7 @@
-(package "vs-edit-mode" "0.1.0" "Minor mode accomplish editing experience in Visual Studio")
+(package "vs-edit-mode"
+         "0.1.0"
+         "Minor mode accomplish editing experience in Visual Studio")
+
 (package-file "vs-edit-mode.el")
 
 (source "jcs-elpa")
