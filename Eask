@@ -2,6 +2,9 @@
          "0.1.0"
          "Minor mode accomplish editing experience in Visual Studio")
 
+(website-url "https://github.com/emacs-vs/vs-edit-mode")
+(keywords "editing" "vs")
+
 (package-file "vs-edit-mode.el")
 
 (source "jcs-elpa")
