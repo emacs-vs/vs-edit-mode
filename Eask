@@ -3,7 +3,7 @@
          "Minor mode accomplish editing experience in Visual Studio")
 
 (website-url "https://github.com/emacs-vs/vs-edit-mode")
-(keywords "editing" "vs")
+(keywords "convenience" "editing" "vs")
 
 (package-file "vs-edit-mode.el")
 
