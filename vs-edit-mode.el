@@ -7,7 +7,7 @@
 ;; URL: https://github.com/emacs-vs/vs-edit-mode
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "24.3"))
-;; Keywords: editing vs
+;; Keywords: convenience editing vs
 
 ;; This file is NOT part of GNU Emacs.
 
