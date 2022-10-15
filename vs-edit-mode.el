@@ -70,7 +70,7 @@
 
 ;;;###autoload
 (define-minor-mode vs-edit-mode
-  "Minor mode 'vs-edit-mode'."
+  "Minor mode `vs-edit-mode'."
   :lighter " VS-Edit"
   :group vs-edit
   (when vs-edit-mode
@@ -78,7 +78,7 @@
       (vs-edit-mode -1))))
 
 (defun vs-edit-turn-on-mode ()
-  "Turn on the 'vs-edit-mode'."
+  "Turn on the `vs-edit-mode'."
   (vs-edit-mode 1))
 
 ;;;###autoload
@@ -104,7 +104,7 @@
   (save-excursion (beginning-of-line) (looking-at "[[:space:]\t]*$")))
 
 (defun vs-edit--current-char-string ()
-  "Get the current character as the 'string'."
+  "Get the current character as the `string'."
   (if (char-before) (string (char-before)) ""))
 
 (defun vs-edit--current-char-equal-p (c)
