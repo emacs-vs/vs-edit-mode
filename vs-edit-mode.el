@@ -214,6 +214,23 @@
   (vs-edit--after-move-line))
 
 ;;
+;; (@* "Format" )
+;;
+
+;;;###autoload
+(defun vs-edit-format-document ()
+  "Format current document."
+  (interactive)
+  (indent-region (point-min) (point-max)))
+
+;;;###autoload
+(defun vs-edit-format-region-or-document ()
+  "Format the document if there are no region apply."
+  (interactive)
+  (if (use-region-p) (indent-region (region-beginning) (region-end))
+    (vs-edit-format-document)))
+
+;;
 ;; (@* "Folding" )
 ;;
 
