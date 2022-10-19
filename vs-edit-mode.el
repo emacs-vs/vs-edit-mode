@@ -31,8 +31,9 @@
 
 ;;; Code:
 
-(require 'mwim)
-(require 'ts-fold)
+(eval-when-compile
+  (require 'mwim)
+  (require 'ts-fold))
 
 (defgroup vs-edit nil
   "Minor mode accomplish editing experience in Visual Studio."
