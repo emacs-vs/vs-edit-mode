@@ -222,9 +222,9 @@
   (vs-edit--after-move-line))
 
 ;;;###autoload
-(defun vs-edit-backward-word ()
+(defun vs-edit-backward-word (&optional _)
   "Smart backward a word."
-  (interactive)
+  (interactive "^P")
   (let ((start-pt (point)) (start-ln (line-number-at-pos))
         (beg-ln (bolp))
         (infront-first-char (vs-edit--infront-first-char-at-line-p)))
@@ -241,9 +241,9 @@
            (end-of-line)))))
 
 ;;;###autoload
-(defun vs-edit-forward-word ()
+(defun vs-edit-forward-word (&optional _)
   "Smart forward a word."
-  (interactive)
+  (interactive "^P")
   (let ((start-pt (point))
         (start-ln (line-number-at-pos))
         (behind-last-char (vs-edit--behind-last-char-at-line-p)))
