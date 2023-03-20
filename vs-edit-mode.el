@@ -83,6 +83,7 @@
 
 (defun vs-edit-turn-on-mode ()
   "Turn on the `vs-edit-mode'."
+  (advice-add 'newline :around #'vs-edit-newline)
   (vs-edit-mode 1))
 
 ;;;###autoload
@@ -111,6 +112,10 @@
 (defun vs-edit--delete-region ()
   "Delete region by default value."
   (when (use-region-p) (delete-region (region-beginning) (region-end))))
+
+(defun vs-edit--current-line-totally-empty-p ()
+  "Current line empty with no spaces/tabs in there.  (absolute)."
+  (and (bolp) (eolp)))
 
 (defun vs-edit--current-line-empty-p ()
   "Current line empty, but accept spaces/tabs in there.  (not absolute)."
@@ -145,6 +150,15 @@
 ;;
 ;; (@* "Core" )
 ;;
+
+(defun vs-edit-newline (func &rest args)
+  "New line advice (FUNC and ARGS)."
+  (when (vs-edit--current-line-totally-empty-p) (indent-for-tab-command))
+  (let ((ln-cur (buffer-substring (line-beginning-position) (point))))
+    (apply func args)
+    (save-excursion
+      (forward-line -1)
+      (when (vs-edit--current-line-totally-empty-p) (insert ln-cur)))))
 
 (defun vs-edit-opening-curly-bracket-key ()
   "For programming langauge that need `{`."
