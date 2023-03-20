@@ -153,12 +153,14 @@
 
 (defun vs-edit-newline (func &rest args)
   "New line advice (FUNC and ARGS)."
-  (when (vs-edit--current-line-totally-empty-p) (indent-for-tab-command))
-  (let ((ln-cur (buffer-substring (line-beginning-position) (point))))
-    (apply func args)
-    (save-excursion
-      (forward-line -1)
-      (when (vs-edit--current-line-totally-empty-p) (insert ln-cur)))))
+  (if (not vs-edit-mode)
+      (apply func args)
+    (when (vs-edit--current-line-totally-empty-p) (indent-for-tab-command))
+    (let ((ln-cur (buffer-substring (line-beginning-position) (point))))
+      (apply func args)
+      (save-excursion
+        (forward-line -1)
+        (when (vs-edit--current-line-totally-empty-p) (insert ln-cur))))))
 
 (defun vs-edit-opening-curly-bracket-key ()
   "For programming langauge that need `{`."
