@@ -13,6 +13,8 @@
 (source "jcs-elpa")
 (source "melpa")
 
+(source-priority "jcs-elpa" 90)
+
 (depends-on "emacs" "26.1")
 (depends-on "mwim")
 (depends-on "ts-fold")
