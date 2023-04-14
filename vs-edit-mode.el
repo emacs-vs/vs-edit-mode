@@ -6,7 +6,7 @@
 ;; Author: Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; URL: https://github.com/emacs-vs/vs-edit-mode
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "26.1") (mwim "0.4") (ts-fold "0.1.0"))
+;; Package-Requires: ((emacs "26.1") (mwim "0.4") (ts-fold "0.1.0") (noflet "0.0.15"))
 ;; Keywords: convenience editing vs
 
 ;; This file is NOT part of GNU Emacs.
@@ -33,7 +33,8 @@
 
 (eval-when-compile
   (require 'mwim)
-  (require 'ts-fold))
+  (require 'ts-fold)
+  (require 'noflet))
 
 (defgroup vs-edit nil
   "Minor mode accomplish editing experience in Visual Studio."
@@ -42,18 +43,19 @@
   :link '(url-link :tag "Repository" "https://github.com/emacs-vs/vs-edit-mode"))
 
 (defcustom vs-edit-active-modes
-  '(actionscript-mode
-    c-mode c++-mode csharp-mode objc-mode
-    css-mode
-    haxe-mode
-    java-mode
-    javascript-mode js-mode js2-mode js3-mode
-    json-mode
-    perl-mode
-    rjsx-mode
-    rust-mode
-    shell-mode
-    typescript-mode)
+  '( actionscript-mode
+     c-mode c++-mode csharp-mode objc-mode
+     css-mode
+     haxe-mode
+     java-mode
+     javascript-mode js-mode js2-mode js3-mode
+     json-mode
+     perl-mode
+     rjsx-mode
+     rust-mode
+     shader-mode
+     shell-mode
+     typescript-mode)
   "List of major mode to active minor mode, `vs-edit-mode'."
   :type 'list
   :group 'vs-edit)
@@ -72,18 +74,23 @@
     map)
   "Keymap used in function `vs-edit-mode'.")
 
+(defun vs-edit-mode--enable ()
+  "Enable function `vs-edit-mode'."
+  (advice-add 'newline :around #'vs-edit-newline)
+  (advice-add 'newline-and-indent :around #'vs-edit-newline-and-indent))
+
 ;;;###autoload
 (define-minor-mode vs-edit-mode
   "Minor mode `vs-edit-mode'."
   :lighter " VS-Edit"
   :group vs-edit
   (when vs-edit-mode
+    (vs-edit-mode--enable)
     (unless (memq major-mode vs-edit-active-modes)
       (vs-edit-mode -1))))
 
 (defun vs-edit-turn-on-mode ()
   "Turn on the `vs-edit-mode'."
-  (advice-add 'newline :around #'vs-edit-newline)
   (vs-edit-mode 1))
 
 ;;;###autoload
@@ -152,7 +159,7 @@
 ;;
 
 (defun vs-edit-newline (func &rest args)
-  "New line advice (FUNC and ARGS)."
+  "Advice for function `newline' (FUNC and ARGS)."
   (if (not vs-edit-mode)
       (apply func args)
     (when (vs-edit--current-line-totally-empty-p) (indent-for-tab-command))
@@ -161,6 +168,14 @@
       (save-excursion
         (forward-line -1)
         (when (vs-edit--current-line-totally-empty-p) (insert ln-cur))))))
+
+(defun vs-edit-newline-and-indent (func &rest args)
+  "Advice for function `newline-and-indent' (FUNC and ARGS)."
+  (if (not vs-edit-mode)
+      (apply func args)
+    ;; XXX: Don't delete previous line' trailing whitespaces!
+    (noflet ((delete-horizontal-space (&rest _)))  ; see function `newline-and-indent' implementation
+      (apply func args))))
 
 (defun vs-edit-opening-curly-bracket-key ()
   "For programming langauge that need `{`."
