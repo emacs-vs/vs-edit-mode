@@ -12,6 +12,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Add folding (a43ad1a751e253662a5b156ba9cd42ebd8312d91)
 * Add format (bf319e5c8fa520d5dbf5b53cd4245e81cff901c0)
 * Enable shift-select for navigation keys (2e7748afcb4a56a4158c16caeca5b7871d174668)
+* Don't delete trailing whitespaces in the previous line (1887c4a86a5a2cb87a8fb0aebeb065b52e0c7186)
 
 ## 0.1.0
 > Released Sep 14, 2022
