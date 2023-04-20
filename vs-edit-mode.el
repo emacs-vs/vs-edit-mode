@@ -167,7 +167,10 @@
       (apply func args)
       (save-excursion
         (forward-line -1)
-        (when (vs-edit--current-line-totally-empty-p) (insert ln-cur))))))
+        (when (vs-edit--current-line-totally-empty-p) (insert ln-cur))))
+    (when (string= "}" (string-trim (thing-at-point 'line)))
+      (let (vs-edit-mode)
+        (save-excursion (newline-and-indent))))))
 
 (defun vs-edit-newline-and-indent (func &rest args)
   "Advice for function `newline-and-indent' (FUNC and ARGS)."
