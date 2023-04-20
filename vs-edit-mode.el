@@ -162,12 +162,15 @@
   "Advice for function `newline' (FUNC and ARGS)."
   (if (not vs-edit-mode)
       (apply func args)
+    ;; XXX: Make sure indent on the empty line.
     (when (vs-edit--current-line-totally-empty-p) (indent-for-tab-command))
+    ;; XXX: Maintain same indentation for the previous line.
     (let ((ln-cur (buffer-substring (line-beginning-position) (point))))
       (apply func args)
       (save-excursion
         (forward-line -1)
         (when (vs-edit--current-line-totally-empty-p) (insert ln-cur))))
+    ;; XXX: Make sure brackets on newline!
     (when (string= "}" (string-trim (thing-at-point 'line)))
       (let (vs-edit-mode)
         (save-excursion (newline-and-indent))))))
