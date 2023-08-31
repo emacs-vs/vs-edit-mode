@@ -343,17 +343,40 @@
 ;; (@* "Folding" )
 ;;
 
+(defun vs-edit--range-at-pos ()
+  "Return the range at position."
+  (when-let ((node (ts-fold--foldable-node-at-pos)))
+    (cons (tsc-node-start-position node) (tsc-node-end-position node))))
+
+(defun vs-edit--range-diff ()
+  "Return the range diff at position."
+  (when-let ((range (vs-edit--range-at-pos)))
+    (- (cdr range) (car range))))
+
+(defun vs-edit--to-smallest-range ()
+  "Move to smallest range."
+  (let ((bol-diff (save-excursion (beginning-of-line) (vs-edit--range-diff)))
+        (eol-diff (save-excursion (end-of-line)       (vs-edit--range-diff))))
+    (cond ((and bol-diff (null eol-diff))
+           (beginning-of-line))
+          ((and eol-diff (null bol-diff))
+           (end-of-line))
+          (t
+           (if (< bol-diff eol-diff)
+               (beginning-of-line)
+             (end-of-line))))))
+
 (defun vs-edit--close-node ()  ; internal
   "Close node at the end of line, inspired from Visual Studio."
   (save-excursion
-    (end-of-line)
+    (vs-edit--to-smallest-range)
     (when (vs-edit--comment-p) (back-to-indentation))
     (ts-fold-close)))
 
 (defun vs-edit--open-node ()  ; internal
   "Open node at the end of line, inspired from Visual Studio."
   (save-excursion
-    (end-of-line)
+    (vs-edit--to-smallest-range)
     (when (vs-edit--comment-p) (back-to-indentation))
     (let ((before-pt (vs-edit--point-at-pos (beginning-of-visual-line)))
           after-pt)
