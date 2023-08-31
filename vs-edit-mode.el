@@ -1,6 +1,6 @@
 ;;; vs-edit-mode.el --- Minor mode accomplish editing experience in Visual Studio  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2022  Shen, Jen-Chieh
+;; Copyright (C) 2022-2023  Shen, Jen-Chieh
 ;; Created date 2022-03-11 22:10:58
 
 ;; Author: Shen, Jen-Chieh <jcs090218@gmail.com>
