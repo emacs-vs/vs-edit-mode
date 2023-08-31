@@ -361,10 +361,12 @@
            (beginning-of-line))
           ((and eol-diff (null bol-diff))
            (end-of-line))
-          (t
+          ((and bol-diff eol-diff)
            (if (< bol-diff eol-diff)
                (beginning-of-line)
-             (end-of-line))))))
+             (end-of-line)))
+          (t  ; Do nothing if no fold range found!
+           ))))
 
 (defun vs-edit--close-node ()  ; internal
   "Close node at the end of line, inspired from Visual Studio."
@@ -379,12 +381,14 @@
     (vs-edit--to-smallest-range)
     (when (vs-edit--comment-p) (back-to-indentation))
     (let ((before-pt (vs-edit--point-at-pos (beginning-of-visual-line)))
-          after-pt)
-      (ts-fold-open)
+          after-pt
+          result)
+      (setq result (ts-fold-open))
       (setq after-pt (vs-edit--point-at-pos (beginning-of-visual-line)))
       (unless (= after-pt before-pt)
         (goto-char before-pt)
-        (end-of-line)))))
+        (end-of-line))
+      result)))
 
 ;;;###autoload
 (defun vs-edit-close-node ()
