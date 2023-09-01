@@ -345,7 +345,8 @@
 
 (defun vs-edit--range-at-pos ()
   "Return the range at position."
-  (when-let ((node (ts-fold--foldable-node-at-pos)))
+  (when-let ((_ tree-sitter-tree)
+             (node (ts-fold--foldable-node-at-pos)))
     (cons (tsc-node-start-position node) (tsc-node-end-position node))))
 
 (defun vs-edit--range-diff ()
