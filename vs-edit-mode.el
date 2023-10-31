@@ -46,16 +46,19 @@
   '( actionscript-mode
      c-mode c++-mode csharp-mode objc-mode
      css-mode
+     groovy-mode
      haxe-mode
      java-mode
      javascript-mode js-mode js2-mode js3-mode
+     jenkinsfile-mode
      json-mode
      perl-mode
      rjsx-mode
      rust-mode
      shader-mode
      shell-mode
-     typescript-mode)
+     typescript-mode
+     tsx-mode)
   "List of major mode to active minor mode, `vs-edit-mode'."
   :type 'list
   :group 'vs-edit)
