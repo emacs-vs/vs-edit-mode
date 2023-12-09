@@ -14,6 +14,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 * Enable shift-select for navigation keys (2e7748afcb4a56a4158c16caeca5b7871d174668)
 * Don't delete trailing whitespaces in the previous line (1887c4a86a5a2cb87a8fb0aebeb065b52e0c7186)
 * Improve folding UX (8796261b721cbbba5402131e2facaac0faa84212)
+* fix(fold): Avoid comment when fold closing (4b902373e585747f9e41096d6cc9bc3387faeedf)
 
 ## 0.1.0
 > Released Sep 14, 2022
