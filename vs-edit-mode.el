@@ -357,18 +357,24 @@
   (when-let ((range (vs-edit--range-at-pos)))
     (- (cdr range) (car range))))
 
+(defun vs-edit--end-of-line-before-comment ()
+  "Move to end of line but avoid the comment."
+  (end-of-line)
+  (ignore-errors (comment-beginning)))
+
 (defun vs-edit--to-smallest-range ()
   "Move to smallest range."
   (let ((bol-diff (save-excursion (beginning-of-line) (vs-edit--range-diff)))
-        (eol-diff (save-excursion (end-of-line)       (vs-edit--range-diff))))
+        (eol-diff (save-excursion  (vs-edit--end-of-line-before-comment)
+                                   (vs-edit--range-diff))))
     (cond ((and bol-diff (null eol-diff))
            (beginning-of-line))
           ((and eol-diff (null bol-diff))
-           (end-of-line))
+           (vs-edit--end-of-line-before-comment))
           ((and bol-diff eol-diff)
            (if (< bol-diff eol-diff)
                (beginning-of-line)
-             (end-of-line)))
+             (vs-edit--end-of-line-before-comment)))
           (t  ; Do nothing if no fold range found!
            ))))
 
