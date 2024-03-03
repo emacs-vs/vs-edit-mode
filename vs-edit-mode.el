@@ -64,6 +64,17 @@
   :group 'vs-edit)
 
 ;;
+;; (@* "Externals" )
+;;
+
+(defvar tree-sitter-tree)
+(declare-function tsc-node-start-position "ext:tsc.el")
+(declare-function tsc-node-end-position "ext:tsc.el")
+(declare-function ts-fold--foldable-node-at-pos "ext:ts-fold.el")
+
+(declare-function lsp-format-buffer "ext:lsp-mode.el")
+
+;;
 ;; (@* "Entry" )
 ;;
 
@@ -333,13 +344,16 @@
 (defun vs-edit-format-document ()
   "Format current document."
   (interactive)
-  (indent-region (point-min) (point-max)))
+  (or (and (featurep 'lsp-mode)
+           (ignore-errors (lsp-format-buffer)))
+      (indent-region (point-min) (point-max))))
 
 ;;;###autoload
 (defun vs-edit-format-region-or-document ()
   "Format the document if there are no region apply."
   (interactive)
-  (if (use-region-p) (indent-region (region-beginning) (region-end))
+  (if (use-region-p)
+      (indent-region (region-beginning) (region-end))
     (vs-edit-format-document)))
 
 ;;
