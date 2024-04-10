@@ -201,29 +201,33 @@
   "For programming langauge that need `{`."
   (interactive)
   (vs-edit--delete-region)
-  (if (vs-edit--comment-or-string-p)
-      (insert "{")
-    (let (pretty-it space-infront)
-      (unless (vs-edit--current-char-equal-p "{")
-        (setq pretty-it t)
-        (when (and (not (vs-edit--current-whitespace-or-tab-p))
-                   (not (vs-edit--current-char-equal-p '("(" "["))))
-          (setq space-infront t)))
+  (cond ((vs-edit--comment-or-string-p)
+         (insert "{"))
+        (t
+         (let (pretty-it space-infront)
+           (when (looking-back "{ " 2)
+             (delete-char -1))
 
-      (when space-infront (insert " "))
+           (unless (vs-edit--current-char-equal-p "{")
+             (setq pretty-it t)
+             (when (and (not (vs-edit--current-whitespace-or-tab-p))
+                        (not (vs-edit--current-char-equal-p '("(" "[" ":" "=" ">"))))
+               (setq space-infront t)))
 
-      (insert "{ }")
-      (backward-char 1)
-      (indent-for-tab-command)
+           (when space-infront (insert " "))
 
-      (when pretty-it
-        (save-excursion
-          (forward-char 2)
-          (when (and (not (eobp))
-                     (not (bolp))
-                     (vs-edit--current-char-equal-p "}"))
-            (backward-char 1)
-            (insert " ")))))))
+           (insert "{ }")
+           (backward-char 1)
+           (indent-for-tab-command)
+
+           (when pretty-it
+             (save-excursion
+               (forward-char 2)
+               (when (and (not (eobp))
+                          (not (bolp))
+                          (vs-edit--current-char-equal-p "}"))
+                 (backward-char 1)
+                 (insert " "))))))))
 
 (defun vs-edit-semicolon-key ()
   "For programming language that use semicolon as the end operator sign."
