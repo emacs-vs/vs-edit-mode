@@ -57,6 +57,7 @@
      rust-mode
      shader-mode
      shell-mode
+     svelte-mode
      typescript-mode
      tsx-mode)
   "List of major mode to active minor mode, `vs-edit-mode'."
