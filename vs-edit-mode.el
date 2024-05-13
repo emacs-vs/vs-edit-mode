@@ -36,6 +36,8 @@
   (require 'ts-fold)
   (require 'noflet))
 
+(require 'sgml-mode)
+
 (defgroup vs-edit nil
   "Minor mode accomplish editing experience in Visual Studio."
   :prefix "vs-edit-"
@@ -48,6 +50,7 @@
      css-mode
      groovy-mode
      haxe-mode
+     html-mode
      java-mode
      javascript-mode js-mode js2-mode js3-mode
      jenkinsfile-mode
@@ -59,7 +62,8 @@
      shell-mode
      svelte-mode
      typescript-mode
-     tsx-mode)
+     tsx-mode
+     xml-mode nxml-mode)
   "List of major mode to active minor mode, `vs-edit-mode'."
   :type 'list
   :group 'vs-edit)
@@ -173,6 +177,13 @@
 ;; (@* "Core" )
 ;;
 
+(defun vs-edit--tag-on-line-p ()
+  "Return non-nil when tag is on the end of this line."
+  (let ((end (line-end-position)))
+    (save-excursion
+      (sgml-skip-tag-forward 1)
+      (and (eolp) (<= (point) end)))))
+
 (defun vs-edit-newline (func &rest args)
   "Advice for function `newline' (FUNC and ARGS)."
   (if (not vs-edit-mode)
@@ -186,7 +197,9 @@
         (forward-line -1)
         (when (vs-edit--current-line-totally-empty-p) (insert ln-cur))))
     ;; XXX: Make sure brackets on newline!
-    (when (string= "}" (string-trim (thing-at-point 'line)))
+    (when (or (string= "}" (string-trim (thing-at-point 'line)))
+              (and (derived-mode-p 'sgml-mode)
+                   (vs-edit--tag-on-line-p)))
       (let (vs-edit-mode)
         (save-excursion (newline-and-indent))))))
 
