@@ -436,7 +436,8 @@
 (defun vs-edit-close-node ()
   "Close the current scope of the node."
   (interactive)
-  (or (vs-edit--close-node) (ts-fold-close)))
+  (when-let ((ov (or (vs-edit--close-node) (ts-fold-close))))
+    (goto-char (overlay-start ov))))
 
 ;;;###autoload
 (defun vs-edit-open-node ()
