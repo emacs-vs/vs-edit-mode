@@ -178,7 +178,7 @@
   (if (char-before) (string (char-before)) ""))
 
 (defun vs-edit--first-backward-char-in-line-p (ch)
-  "Return t if the CH is the first character on the left."
+  "Return t if the CH is the first character on the left in line."
   (save-excursion
     (when (re-search-backward "[^[:space:]]" (line-beginning-position) t)
       (forward-char 1)
