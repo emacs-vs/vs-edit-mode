@@ -173,6 +173,18 @@
     (when pt (goto-char pt))
     (null (re-search-forward "[^ \t]" (line-end-position) t))))
 
+(defun vs-edit--before-char-string ()
+  "Get the current character as the `string'."
+  (if (char-before) (string (char-before)) ""))
+
+(defun vs-edit--first-backward-char-in-line-p (ch)
+  "Check the first character on the left is CH or not, with current line
+as boundary."
+  (save-excursion
+    (when (re-search-backward "[^[:space:]]" (line-beginning-position) t)
+      (forward-char 1)
+      (string= (vs-edit--before-char-string) ch))))
+
 ;;
 ;; (@* "Core" )
 ;;
@@ -188,8 +200,7 @@
   "Advice for function `newline' (FUNC and ARGS)."
   (cond (vs-edit-mode
          (let ((vs-edit-mode)
-               (behind-brackets (save-excursion
-                                  (search-backward "{" (line-beginning-position) t))))
+               (behind-brackets (vs-edit--first-backward-char-in-line-p "{")))
            ;; XXX: Make sure indent on the empty line.
            (when (vs-edit--current-line-totally-empty-p) (indent-for-tab-command))
            ;; XXX: Maintain same indentation for the previous line.
