@@ -50,7 +50,7 @@
      css-mode
      groovy-mode
      haxe-mode
-     html-mode
+     html-mode sgml-mode
      java-mode
      javascript-mode js-mode js2-mode js3-mode
      jenkinsfile-mode
