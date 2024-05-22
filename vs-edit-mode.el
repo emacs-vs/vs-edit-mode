@@ -187,19 +187,19 @@
 (defun vs-edit-newline (func &rest args)
   "Advice for function `newline' (FUNC and ARGS)."
   (cond (vs-edit-mode
-         ;; XXX: Make sure indent on the empty line.
-         (when (vs-edit--current-line-totally-empty-p) (indent-for-tab-command))
-         ;; XXX: Maintain same indentation for the previous line.
-         (let ((ln-cur (buffer-substring (line-beginning-position) (point))))
-           (apply func args)
-           (save-excursion
-             (forward-line -1)
-             (when (vs-edit--current-line-totally-empty-p) (insert ln-cur))))
-         ;; XXX: Make sure brackets on newline!
-         (when (or (string= "}" (string-trim (thing-at-point 'line)))
-                   (and (derived-mode-p 'sgml-mode)
-                        (vs-edit--tag-on-line-p)))
-           (let (vs-edit-mode)
+         (let (vs-edit-mode)
+           ;; XXX: Make sure indent on the empty line.
+           (when (vs-edit--current-line-totally-empty-p) (indent-for-tab-command))
+           ;; XXX: Maintain same indentation for the previous line.
+           (let ((ln-cur (buffer-substring (line-beginning-position) (point))))
+             (apply func args)
+             (save-excursion
+               (forward-line -1)
+               (when (vs-edit--current-line-totally-empty-p) (insert ln-cur))))
+           ;; XXX: Make sure brackets on newline!
+           (when (or (string= "}" (string-trim (thing-at-point 'line)))
+                     (and (derived-mode-p 'sgml-mode)
+                          (vs-edit--tag-on-line-p)))
              (save-excursion (newline-and-indent)))))
         (t (apply func args))))
 
