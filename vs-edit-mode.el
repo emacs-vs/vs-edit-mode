@@ -210,11 +210,13 @@ as boundary."
                (forward-line -1)
                (when (vs-edit--current-line-totally-empty-p) (insert ln-cur))))
            ;; XXX: Make sure brackets on newline!
-           (when (or (and behind-brackets
-                          (string= "}" (string-trim (thing-at-point 'line))))
-                     (and (derived-mode-p 'sgml-mode)
-                          (vs-edit--tag-on-line-p)))
-             (save-excursion (newline-and-indent)))))
+           (if (or (and behind-brackets
+                        (string= "}" (string-trim (thing-at-point 'line))))
+                   (and (derived-mode-p 'sgml-mode)
+                        (vs-edit--tag-on-line-p)))
+               (save-excursion (newline-and-indent))
+             ;; Else, make sure next line is indented
+             (save-excursion (forward-line 1) (indent-for-tab-command)))))
         (t (apply func args))))
 
 (defun vs-edit-newline-and-indent (func &rest args)
