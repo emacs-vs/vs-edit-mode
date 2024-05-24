@@ -234,7 +234,7 @@
          (insert "{"))
         (t
          (let (pretty-it space-infront)
-           (when (looking-back "{ " 2)
+           (when (ignore-errors (looking-back "{ " 2))
              (delete-char -1))
 
            (unless (vs-edit--current-char-equal-p "{")
