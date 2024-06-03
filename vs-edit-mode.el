@@ -50,7 +50,6 @@
      css-mode
      groovy-mode
      haxe-mode
-     html-mode sgml-mode
      java-mode
      javascript-mode js-mode js2-mode js3-mode
      jenkinsfile-mode
@@ -63,6 +62,7 @@
      svelte-mode
      typescript-mode
      tsx-mode
+     web-mode html-mode sgml-mode
      xml-mode nxml-mode)
   "List of major mode to active minor mode, `vs-edit-mode'."
   :type 'list
