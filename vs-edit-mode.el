@@ -229,8 +229,9 @@
 (defun vs-edit-opening-curly-bracket-key ()
   "For programming langauge that need `{`."
   (interactive)
-  (vs-edit--delete-region)
-  (cond ((vs-edit--comment-or-string-p)
+  (cond ((use-region-p)
+         (self-insert-command 1 ?\{))
+        ((vs-edit--comment-or-string-p)
          (insert "{"))
         (t
          (let (pretty-it space-infront)
