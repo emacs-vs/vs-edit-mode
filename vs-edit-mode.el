@@ -31,12 +31,11 @@
 
 ;;; Code:
 
-(eval-when-compile
-  (require 'mwim)
-  (require 'ts-fold)
-  (require 'noflet))
-
 (require 'sgml-mode)
+
+(require 'mwim)
+(require 'ts-fold)
+(require 'noflet)
 
 (defgroup vs-edit nil
   "Minor mode accomplish editing experience in Visual Studio."
