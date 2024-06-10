@@ -263,12 +263,13 @@
   (interactive)
   (vs-edit--delete-region)
   (insert ";")
-  (save-excursion
-    (forward-char 1)
-    (when (and (not (bolp))
-               (vs-edit--current-char-equal-p "}"))
-      (backward-char 1)
-      (insert " "))))
+  (unless (vs-edit--comment-or-string-p)
+    (save-excursion
+      (forward-char 1)
+      (when (and (not (bolp))
+                 (vs-edit--current-char-equal-p "}"))
+        (backward-char 1)
+        (insert " ")))))
 
 (defun vs-edit-sharp-key ()
   "For programming language that use # as the preprocessor."
