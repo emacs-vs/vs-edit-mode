@@ -31,11 +31,12 @@
 
 ;;; Code:
 
-(require 'sgml-mode)
+(eval-when-compile
+  (require 'mwim)
+  (require 'ts-fold)
+  (require 'noflet))
 
-(require 'mwim)
-(require 'ts-fold)
-(require 'noflet)
+(require 'sgml-mode)
 
 (defgroup vs-edit nil
   "Minor mode accomplish editing experience in Visual Studio."
@@ -396,6 +397,7 @@
 
 (defun vs-edit--range-at-pos ()
   "Return the range at position."
+  (require 'ts-fold)
   (when-let ((tree-sitter-tree)
              (node (ts-fold--foldable-node-at-pos)))
     (cons (tsc-node-start-position node) (tsc-node-end-position node))))
