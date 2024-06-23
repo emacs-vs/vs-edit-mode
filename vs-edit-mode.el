@@ -379,7 +379,8 @@
 (defun vs-edit-format-document ()
   "Format current document."
   (interactive)
-  (or (and (featurep 'lsp-mode)
+  (message nil)  ; avoid scroll mess up
+  (or (and (bound-and-true-p lsp-managed-mode)
            (ignore-errors (lsp-format-buffer)))
       (indent-region (point-min) (point-max))))
 
@@ -387,9 +388,11 @@
 (defun vs-edit-format-region-or-document ()
   "Format the document if there are no region apply."
   (interactive)
-  (if (use-region-p)
-      (indent-region (region-beginning) (region-end))
-    (vs-edit-format-document)))
+  (cond ((use-region-p)
+         (message nil)  ; avoid scroll mess up
+         (indent-region (region-beginning) (region-end)))
+        (t
+         (vs-edit-format-document))))
 
 ;;
 ;; (@* "Folding" )
