@@ -48,6 +48,7 @@
   '( actionscript-mode
      c-mode c++-mode csharp-mode objc-mode
      css-mode
+     go-mode
      groovy-mode
      haxe-mode
      java-mode
