@@ -61,6 +61,7 @@
      shader-mode
      shell-mode
      svelte-mode
+     swift-mode
      typescript-mode
      tsx-mode
      web-mode html-mode sgml-mode
