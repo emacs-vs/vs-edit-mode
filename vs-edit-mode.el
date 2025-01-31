@@ -32,11 +32,11 @@
 ;;; Code:
 
 (eval-when-compile
+  (require 'sgml-mode)
+
   (require 'mwim)
   (require 'ts-fold)
   (require 'noflet))
-
-(require 'sgml-mode)
 
 (defgroup vs-edit nil
   "Minor mode accomplish editing experience in Visual Studio."
@@ -80,6 +80,8 @@
 (declare-function ts-fold--foldable-node-at-pos "ext:ts-fold.el")
 
 (declare-function lsp-format-buffer "ext:lsp-mode.el")
+
+(declare-function sgml-skip-tag-forward "ext:sgml-mode.el")
 
 ;;
 ;; (@* "Entry" )
@@ -192,6 +194,7 @@
 
 (defun vs-edit--tag-on-line-p ()
   "Return non-nil when tag is on the end of this line."
+  (require 'sgml-mode)
   (let ((end (line-end-position)))
     (save-excursion
       (sgml-skip-tag-forward 1)
