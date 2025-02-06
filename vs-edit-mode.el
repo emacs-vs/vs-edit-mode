@@ -67,7 +67,7 @@
      web-mode html-mode sgml-mode
      xml-mode nxml-mode)
   "List of major mode to active minor mode, `vs-edit-mode'."
-  :type 'list
+  :type '(list symbol)
   :group 'vs-edit)
 
 ;;
@@ -412,13 +412,13 @@
 (defun vs-edit--range-at-pos ()
   "Return the range at position."
   (require 'ts-fold)
-  (when-let ((tree-sitter-tree)
-             (node (ts-fold--foldable-node-at-pos)))
+  (when-let* ((tree-sitter-tree)
+              (node (ts-fold--foldable-node-at-pos)))
     (cons (tsc-node-start-position node) (tsc-node-end-position node))))
 
 (defun vs-edit--range-diff ()
   "Return the range diff at position."
-  (when-let ((range (vs-edit--range-at-pos)))
+  (when-let* ((range (vs-edit--range-at-pos)))
     (- (cdr range) (car range))))
 
 (defun vs-edit--end-of-line-before-comment ()
