@@ -9,13 +9,13 @@
 
 (script "test" "echo \"Error: no test specified\" && exit 1")
 
-(source "gnu")
-(source "jcs-elpa")
-(source "melpa")
+(source 'gnu)
+(source 'melpa)
+(source 'jcs-elpa)
 
-(source-priority "jcs-elpa" 90)
+(source-priority 'jcs-elpa 90)
 
-(depends-on "emacs" "26.1")
+(depends-on "emacs" "27.1")
 (depends-on "mwim")
 (depends-on "ts-fold")
 (depends-on "noflet")
