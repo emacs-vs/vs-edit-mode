@@ -188,6 +188,12 @@
       (forward-char 1)
       (string= (vs-edit--before-char-string) ch))))
 
+(defun vs-edit--first-forward-char-in-line-p (ch)
+  "Return t if the CH is the first character on the right in line."
+  (save-excursion
+    (when (re-search-forward "[^[:space:]]" (line-end-position) t)
+      (string= (vs-edit--before-char-string) ch))))
+
 ;;
 ;; (@* "Core" )
 ;;
@@ -215,7 +221,7 @@
                (when (vs-edit--current-line-totally-empty-p) (insert ln-cur))))
            ;; XXX: Make sure brackets on newline!
            (if (or (and behind-brackets
-                        (string= "}" (string-trim (thing-at-point 'line))))
+                        (vs-edit--first-forward-char-in-line-p "}"))
                    (and (derived-mode-p 'sgml-mode)
                         (vs-edit--tag-on-line-p)))
                (save-excursion (newline-and-indent))
