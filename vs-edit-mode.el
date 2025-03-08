@@ -32,6 +32,7 @@
 ;;; Code:
 
 (eval-when-compile
+  (require 'hideshow)
   (require 'sgml-mode)
 
   (require 'mwim)
@@ -82,6 +83,11 @@
 (declare-function lsp-format-buffer "ext:lsp-mode.el")
 
 (declare-function sgml-skip-tag-forward "ext:sgml-mode.el")
+
+(declare-function hs-hide-block "ext:hideshow.el")
+(declare-function hs-show-block "ext:hideshow.el")
+(declare-function hs-hide-all "ext:hideshow.el")
+(declare-function hs-show-all "ext:hideshow.el")
 
 ;;
 ;; (@* "Entry" )
@@ -442,14 +448,14 @@
           (t  ; Do nothing if no fold range found!
            ))))
 
-(defun vs-edit--close-node ()  ; internal
+(defun vs-edit--fold-close-node ()  ; internal
   "Close node at the end of line, inspired from Visual Studio."
   (save-excursion
     (vs-edit--to-smallest-range)
     (when (vs-edit--comment-p) (back-to-indentation))
     (ts-fold-close)))
 
-(defun vs-edit--open-node ()  ; internal
+(defun vs-edit--fold-open-node ()  ; internal
   "Open node at the end of line, inspired from Visual Studio."
   (save-excursion
     (vs-edit--to-smallest-range)
@@ -465,19 +471,41 @@
       result)))
 
 ;;;###autoload
-(defun vs-edit-close-node ()
+(defun vs-edit-fold-close ()
   "Close the current scope of the node."
   (interactive)
-  (when-let* ((ov (or (vs-edit--close-node) (ts-fold-close)))
+  (when-let* ((ov (or (ignore-errors (vs-edit--fold-close-node))
+                      (ignore-errors (ts-fold-close))
+                      (progn (require 'hideshow)
+                             (hs-hide-block))))
               (beg (overlay-start ov))
               ((< beg (point))))
     (goto-char beg)))
 
 ;;;###autoload
-(defun vs-edit-open-node ()
+(defun vs-edit-fold-open ()
   "Open the current scope of the node."
   (interactive)
-  (or (vs-edit--open-node) (ts-fold-open)))
+  (or (ignore-errors (vs-edit--fold-open-node))
+      (ignore-errors (ts-fold-open))
+      (progn (require 'hideshow)
+             (hs-show-block))))
+
+;;;###autoload
+(defun vs-edit-fold-close-all ()
+  "Close all nodes in buffer."
+  (interactive)
+  (or (ignore-errors (ts-fold-close-all))
+      (progn (require 'hideshow)
+             (hs-hide-all))))
+
+;;;###autoload
+(defun vs-edit-fold-open-all ()
+  "Open all nodes in buffer."
+  (interactive)
+  (or (ignore-errors (ts-fold-open-all))
+      (progn (require 'hideshow)
+             (hs-show-all))))
 
 (provide 'vs-edit-mode)
 ;;; vs-edit-mode.el ends here
