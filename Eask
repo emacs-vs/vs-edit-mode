@@ -1,5 +1,5 @@
 (package "vs-edit-mode"
-         "0.1.0"
+         "0.3.0"
          "Minor mode accomplish editing experience in Visual Studio")
 
 (website-url "https://github.com/emacs-vs/vs-edit-mode")
