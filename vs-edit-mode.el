@@ -6,7 +6,7 @@
 ;; Author: Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; URL: https://github.com/emacs-vs/vs-edit-mode
 ;; Version: 0.3.0
-;; Package-Requires: ((emacs "27.1") (noflet "0.0.15") (mwim "0.4") (ts-fold "0.1.0") (savefold "0.0.1"))
+;; Package-Requires: ((emacs "28.1") (noflet "0.0.15") (mwim "0.4") (ts-fold "0.1.0") (savefold "0.0.1"))
 ;; Keywords: convenience editing vs
 
 ;; This file is NOT part of GNU Emacs.

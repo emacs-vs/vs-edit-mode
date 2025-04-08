@@ -15,7 +15,7 @@
 
 (source-priority 'jcs-elpa 90)
 
-(depends-on "emacs" "27.1")
+(depends-on "emacs" "28.1")
 (depends-on "noflet")
 (depends-on "mwim")
 (depends-on "ts-fold")
