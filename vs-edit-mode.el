@@ -6,7 +6,7 @@
 ;; Author: Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; URL: https://github.com/emacs-vs/vs-edit-mode
 ;; Version: 0.3.0
-;; Package-Requires: ((emacs "27.1") (mwim "0.4") (ts-fold "0.1.0") (noflet "0.0.15"))
+;; Package-Requires: ((emacs "27.1") (noflet "0.0.15") (mwim "0.4") (ts-fold "0.1.0") (savefold "0.0.1"))
 ;; Keywords: convenience editing vs
 
 ;; This file is NOT part of GNU Emacs.
@@ -36,8 +36,9 @@
   (require 'sgml-mode)
 
   (require 'mwim)
+  (require 'noflet)
   (require 'ts-fold)
-  (require 'noflet))
+  (require 'savefold))
 
 (defgroup vs-edit nil
   "Minor mode accomplish editing experience in Visual Studio."
@@ -79,6 +80,9 @@
 (declare-function tsc-node-start-position "ext:tsc.el")
 (declare-function tsc-node-end-position "ext:tsc.el")
 (declare-function ts-fold--foldable-node-at-pos "ext:ts-fold.el")
+
+(declare-function savefold-ts-fold--save-folds "ext:savefold-ts-fold.el")
+(declare-function savefold-ts-fold--recover-folds "ext:savefold-ts-fold.el")
 
 (declare-function lsp-format-buffer "ext:lsp-mode.el")
 
@@ -393,13 +397,30 @@
 ;;
 
 ;;;###autoload
+(defun vs-edit-indent-region (start end &optional column &rest _)
+  "The same as `indent-region' but doesn't break the indentation.
+
+The arguments START, END and COLUMN came from the original
+function `indent-region'."
+  (interactive "r\nP")
+  ;; First unfold all before indenting.
+  (when savefold-ts-fold-mode
+    (savefold-ts-fold--save-folds)
+    (ts-fold-open-all))
+  ;; Do indentation only when there is no fold region.
+  (indent-region start end column)
+  ;; Then recover it.
+  (when savefold-ts-fold-mode
+    (savefold-ts-fold--recover-folds)))
+
+;;;###autoload
 (defun vs-edit-format-document ()
   "Format current document."
   (interactive)
   (message nil)  ; avoid scroll mess up
   (or (and (bound-and-true-p lsp-managed-mode)
            (ignore-errors (lsp-format-buffer)))
-      (indent-region (point-min) (point-max))))
+      (vs-edit-indent-region (point-min) (point-max))))
 
 ;;;###autoload
 (defun vs-edit-format-region-or-document ()
@@ -407,7 +428,7 @@
   (interactive)
   (cond ((use-region-p)
          (message nil)  ; avoid scroll mess up
-         (indent-region (region-beginning) (region-end)))
+         (vs-edit-indent-region (region-beginning) (region-end)))
         (t
          (vs-edit-format-document))))
 

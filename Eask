@@ -16,8 +16,9 @@
 (source-priority 'jcs-elpa 90)
 
 (depends-on "emacs" "27.1")
+(depends-on "noflet")
 (depends-on "mwim")
 (depends-on "ts-fold")
-(depends-on "noflet")
+(depends-on "savefold")
 
 (setq network-security-level 'low)  ; see https://github.com/jcs090218/setup-emacs-windows/issues/156#issuecomment-932956432
