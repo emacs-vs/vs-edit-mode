@@ -6,7 +6,7 @@
 ;; Author: Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; URL: https://github.com/emacs-vs/vs-edit-mode
 ;; Version: 0.3.0
-;; Package-Requires: ((emacs "28.1") (noflet "0.0.15") (mwim "0.4") (ts-fold "0.1.0") (savefold "0.0.1"))
+;; Package-Requires: ((emacs "28.1") (noflet "0.0.15") (mwim "0.4") (ts-fold "0.1.0") (savefold "0.0.1") (fold-this "0.4.4"))
 ;; Keywords: convenience editing vs
 
 ;; This file is NOT part of GNU Emacs.
@@ -38,7 +38,8 @@
   (require 'mwim)
   (require 'noflet)
   (require 'ts-fold)
-  (require 'savefold))
+  (require 'savefold)
+  (require 'fold-this))
 
 (defgroup vs-edit nil
   "Minor mode accomplish editing experience in Visual Studio."
@@ -76,6 +77,11 @@
 ;; (@* "Externals" )
 ;;
 
+(declare-function hs-hide-block "ext:hideshow.el")
+(declare-function hs-show-block "ext:hideshow.el")
+(declare-function hs-hide-all "ext:hideshow.el")
+(declare-function hs-show-all "ext:hideshow.el")
+
 (defvar tree-sitter-tree)
 (declare-function tsc-node-start-position "ext:tsc.el")
 (declare-function tsc-node-end-position "ext:tsc.el")
@@ -84,14 +90,12 @@
 (declare-function savefold-ts-fold--save-folds "ext:savefold-ts-fold.el")
 (declare-function savefold-ts-fold--recover-folds "ext:savefold-ts-fold.el")
 
+(declare-function fold-this-unfold-at-point "ext:fold-this.el")
+(declare-function fold-this-unfold-all "ext:fold-this.el")
+
 (declare-function lsp-format-buffer "ext:lsp-mode.el")
 
 (declare-function sgml-skip-tag-forward "ext:sgml-mode.el")
-
-(declare-function hs-hide-block "ext:hideshow.el")
-(declare-function hs-show-block "ext:hideshow.el")
-(declare-function hs-hide-all "ext:hideshow.el")
-(declare-function hs-show-all "ext:hideshow.el")
 
 ;;
 ;; (@* "Entry" )
@@ -495,13 +499,17 @@ function `indent-region'."
 (defun vs-edit-fold-close ()
   "Close the current scope of the node."
   (interactive)
-  (when-let* ((ov (or (ignore-errors (vs-edit--fold-close-node))
-                      (ignore-errors (ts-fold-close))
-                      (progn (require 'hideshow)
-                             (hs-hide-block))))
-              (beg (overlay-start ov))
-              ((< beg (point))))
-    (goto-char beg)))
+  (cond ((use-region-p)
+         (require 'fold-this)
+         (call-interactively #'fold-this))
+        (t
+         (when-let* ((ov (or (ignore-errors (vs-edit--fold-close-node))
+                             (ignore-errors (ts-fold-close))
+                             (progn (require 'hideshow)
+                                    (hs-hide-block))))
+                     (beg (overlay-start ov))
+                     ((< beg (point))))
+           (goto-char beg)))))
 
 ;;;###autoload
 (defun vs-edit-fold-open ()
@@ -509,24 +517,37 @@ function `indent-region'."
   (interactive)
   (or (ignore-errors (vs-edit--fold-open-node))
       (ignore-errors (ts-fold-open))
-      (progn (require 'hideshow)
-             (hs-show-block))))
+      (progn
+        (require 'hideshow)
+        (hs-show-block))
+      (progn
+        (require 'fold-this)
+        (fold-this-unfold-at-point))))
 
 ;;;###autoload
 (defun vs-edit-fold-close-all ()
   "Close all nodes in buffer."
   (interactive)
-  (or (ignore-errors (ts-fold-close-all))
-      (progn (require 'hideshow)
-             (hs-hide-all))))
+  (cond ((use-region-p)
+         (require 'fold-this)
+         (user-error "No default region fold all action"))
+        (t
+         (or (ignore-errors (ts-fold-close-all))
+             (progn
+               (require 'hideshow)
+               (hs-hide-all))))))
 
 ;;;###autoload
 (defun vs-edit-fold-open-all ()
   "Open all nodes in buffer."
   (interactive)
   (or (ignore-errors (ts-fold-open-all))
-      (progn (require 'hideshow)
-             (hs-show-all))))
+      (progn
+        (require 'hideshow)
+        (hs-show-all))
+      (progn
+        (require 'fold-this)
+        (fold-this-unfold-all))))
 
 (provide 'vs-edit-mode)
 ;;; vs-edit-mode.el ends here
