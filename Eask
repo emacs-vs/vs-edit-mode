@@ -1,3 +1,5 @@
+;; -*- mode: eask; lexical-binding: t -*-
+
 (package "vs-edit-mode"
          "0.3.0"
          "Minor mode accomplish editing experience in Visual Studio")
