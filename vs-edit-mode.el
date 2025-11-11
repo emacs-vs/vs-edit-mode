@@ -6,7 +6,7 @@
 ;; Author: Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; URL: https://github.com/emacs-vs/vs-edit-mode
 ;; Version: 0.3.0
-;; Package-Requires: ((emacs "28.1") (noflet "0.0.15") (mwim "0.4") (ts-fold "0.1.0") (savefold "0.0.1") (fold-this "0.4.4"))
+;; Package-Requires: ((emacs "28.1") (noflet "0.0.15") (mwim "0.4") (ts-fold "0.1.0") (foldvis "0.1.0") (savefold "0.0.1") (fold-this "0.4.4"))
 ;; Keywords: convenience editing vs
 
 ;; This file is NOT part of GNU Emacs.
@@ -33,11 +33,13 @@
 
 (eval-when-compile
   (require 'hideshow)
+  (require 'outline)
   (require 'sgml-mode)
 
   (require 'mwim)
   (require 'noflet)
   (require 'ts-fold)
+  (require 'foldvis)
   (require 'savefold)
   (require 'fold-this))
 
@@ -81,6 +83,11 @@
 (declare-function hs-show-block "ext:hideshow.el")
 (declare-function hs-hide-all "ext:hideshow.el")
 (declare-function hs-show-all "ext:hideshow.el")
+
+(declare-function outline-show-entry "ext:outline.el")
+(declare-function outline-hide-entry "ext:outline.el")
+(declare-function outline-show-all "ext:outline.el")
+(declare-function outline-hide-sublevels "ext:outline.el")
 
 (defvar tree-sitter-tree)
 (declare-function tsc-node-start-position "ext:tsc.el")
@@ -495,6 +502,7 @@ function `indent-region'."
         (end-of-line))
       result)))
 
+
 ;;;###autoload
 (defun vs-edit-fold-close ()
   "Close the current scope of the node."
@@ -503,10 +511,13 @@ function `indent-region'."
          (require 'fold-this)
          (call-interactively #'fold-this))
         (t
-         (when-let* ((ov (or (ignore-errors (vs-edit--fold-close-node))
-                             (ignore-errors (ts-fold-close))
-                             (progn (require 'hideshow)
-                                    (hs-hide-block))))
+         (when-let* ((ov (or (and (foldvis-ts-fold--valid-p)
+                                  (ignore-errors (vs-edit--fold-close-node))
+                                  (ignore-errors (ts-fold-close)))
+                             (and (foldvis-hideshow--valid-p)
+                                  (hs-hide-block))
+                             (and (foldvis-outline--valid-p)
+                                  (outline-hide-entry))))
                      (beg (overlay-start ov))
                      ((< beg (point))))
            (goto-char beg)))))
@@ -515,11 +526,13 @@ function `indent-region'."
 (defun vs-edit-fold-open ()
   "Open the current scope of the node."
   (interactive)
-  (or (ignore-errors (vs-edit--fold-open-node))
-      (ignore-errors (ts-fold-open))
-      (progn
-        (require 'hideshow)
-        (hs-show-block))
+  (or (and (foldvis-ts-fold--valid-p)
+           (ignore-errors (vs-edit--fold-open-node))
+           (ignore-errors (ts-fold-open)))
+      (and (foldvis-hideshow--valid-p)
+           (hs-show-block))
+      (and (foldvis-outline--valid-p)
+           (outline-show-entry))
       (progn
         (require 'fold-this)
         (fold-this-unfold-at-point))))
@@ -532,19 +545,23 @@ function `indent-region'."
          (require 'fold-this)
          (user-error "No default region fold all action"))
         (t
-         (or (ignore-errors (ts-fold-close-all))
-             (progn
-               (require 'hideshow)
-               (hs-hide-all))))))
+         (or (and (foldvis-ts-fold--valid-p)
+                  (ts-fold-close-all))
+             (and (foldvis-hideshow--valid-p)
+                  (hs-hide-all))
+             (and (foldvis-outline--valid-p)
+                  (call-interactively #'outline-hide-sublevels))))))
 
 ;;;###autoload
 (defun vs-edit-fold-open-all ()
   "Open all nodes in buffer."
   (interactive)
-  (or (ignore-errors (ts-fold-open-all))
-      (progn
-        (require 'hideshow)
-        (hs-show-all))
+  (or (and (foldvis-ts-fold--valid-p)
+           (ts-fold-open-all))
+      (and (foldvis-hideshow--valid-p)
+           (hs-show-all))
+      (and (foldvis-outline--valid-p)
+           (outline-show-all))
       (progn
         (require 'fold-this)
         (fold-this-unfold-all))))

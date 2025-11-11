@@ -21,6 +21,7 @@
 (depends-on "noflet")
 (depends-on "mwim")
 (depends-on "ts-fold")
+(depends-on "foldvis")
 (depends-on "savefold")
 (depends-on "fold-this")
 
