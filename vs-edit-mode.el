@@ -526,8 +526,8 @@ function `indent-region'."
   "Open the current scope of the node."
   (interactive)
   (or (and (foldvis-ts-fold--valid-p)
-           (ignore-errors (vs-edit--fold-open-node))
-           (ignore-errors (ts-fold-open)))
+           (or (ignore-errors (vs-edit--fold-open-node))
+               (ignore-errors (ts-fold-open))))
       (and (foldvis-hideshow--valid-p)
            (hs-show-block))
       (and (foldvis-outline--valid-p)
