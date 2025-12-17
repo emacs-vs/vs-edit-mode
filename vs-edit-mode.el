@@ -502,7 +502,6 @@ function `indent-region'."
         (end-of-line))
       result)))
 
-
 ;;;###autoload
 (defun vs-edit-fold-close ()
   "Close the current scope of the node."
@@ -512,8 +511,8 @@ function `indent-region'."
          (call-interactively #'fold-this))
         (t
          (when-let* ((ov (or (and (foldvis-ts-fold--valid-p)
-                                  (ignore-errors (vs-edit--fold-close-node))
-                                  (ignore-errors (ts-fold-close)))
+                                  (or (ignore-errors (vs-edit--fold-close-node))
+                                      (ignore-errors (ts-fold-close))))
                              (and (foldvis-hideshow--valid-p)
                                   (hs-hide-block))
                              (and (foldvis-outline--valid-p)
