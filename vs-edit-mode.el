@@ -417,12 +417,12 @@ function `indent-region'."
   ;; First unfold all before indenting.
   (when savefold-ts-fold-mode
     (savefold-ts-fold--save-folds)
-    (ts-fold-open-all))
+    (ignore-errors (ts-fold-open-all)))
   ;; Do indentation only when there is no fold region.
   (indent-region start end column)
   ;; Then recover it.
   (when savefold-ts-fold-mode
-    (savefold-ts-fold--recover-folds)))
+    (ignore-errors (savefold-ts-fold--recover-folds))))
 
 ;;;###autoload
 (defun vs-edit-format-document ()
